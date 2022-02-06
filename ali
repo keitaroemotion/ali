@@ -62,6 +62,8 @@ def select_url(key):
         print('choose right key.')
         select_url(key)
 
-i = int(input("no: "))
-select_url(list(aliases)[i])
+i = input("no: ")
+if(i == 'q'):
+    sys.exit()
+select_url(list(aliases)[int(i)])
 file.close()
