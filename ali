@@ -16,6 +16,11 @@ pattern_url   = re.compile(r"^[\t\s]+.*")
 
 if(len(sys.argv) > 1):
     kw = sys.argv[1]
+    if(kw == 'list'):
+        print()
+        os.system(f"cat {config}")
+        print()
+        sys.exit()
     #
     # direct reference
     #
@@ -62,6 +67,7 @@ def select_url(key):
         print('choose right key.')
         select_url(key)
 
+print("")
 i = input("no: ")
 if(i == 'q'):
     sys.exit()
