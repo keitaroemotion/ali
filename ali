@@ -50,13 +50,17 @@ for i, k in enumerate(aliases):
 def select_url(key):
     options = {}
 
+    c = 0
     for k in aliases[key]:
+        if(re.compile("^[\s\t]*http").match(k)):
+            k = f"{c} {k}"
         ksp = k.split(' ')
         _key = ksp[0] 
         url = ksp[1]
         options[_key] = url
         description = ' '.join(ksp[2:])
         print(f"{_key}|{url}| {description}")
+        c = c + 1
 
     _key = input("key: ")
     if(_key.strip() == 'q'):
