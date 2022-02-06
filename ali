@@ -1,0 +1,67 @@
+#!/usr/bin/env python3
+
+import os
+import re
+import sys
+ 
+config = f"{os.environ['HOME']}/.ali"
+file = open(config, 'r')
+lines = file.read().split('\n')
+lines.reverse()
+
+aliases={}
+urls = []
+pattern_blank = re.compile(r"^[\t\s\n\r]*$")
+pattern_url   = re.compile(r"^[\t\s]+.*")
+
+if(len(sys.argv) > 1):
+    kw = sys.argv[1]
+    #
+    # direct reference
+    #
+    found = False
+    for line in lines:
+        if(not pattern_blank.match(line) and pattern_url.match(line)):
+            if(re.compile(f"^[\t\s]*{kw}\s").match(line)):
+                url = line.strip().split(' ')[1]
+                os.system(f"open {url}")
+                found = True
+    if(found):
+        sys.exit()
+
+for line in lines:
+    if(not pattern_blank.match(line)):
+        if(pattern_url.match(line)):
+            urls.append(line.strip())
+        else:
+            # this shuld be key identifier
+            aliases[line.strip()] = urls
+            urls = []
+
+print("\nselect category: ")
+for i, k in enumerate(aliases):
+    print(f"{i} {k}")
+
+def select_url(key):
+    options = {}
+
+    for k in aliases[key]:
+        ksp = k.split(' ')
+        _key = ksp[0] 
+        url = ksp[1]
+        options[_key] = url
+        description = ' '.join(ksp[2:])
+        print(f"{_key}|{url}| {description}")
+
+    _key = input("key: ")
+    if(_key.strip() == 'q'):
+        return
+    elif(_key in options):
+        os.system(f"open {options[_key]}")
+    else:
+        print('choose right key.')
+        select_url(key)
+
+i = int(input("no: "))
+select_url(list(aliases)[i])
+file.close()
